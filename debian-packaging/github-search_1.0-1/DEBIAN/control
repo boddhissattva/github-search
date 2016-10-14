@@ -1,0 +1,10 @@
+Package: github-search
+Version: 1.0-1
+Section: base
+Priority: optional
+Architecture: all
+depends: curl,grep
+Maintainer: Jean Yvan Tissot  <jean.yvan.tissot@gmail.com>
+Description: github-search
+ searches for repositories on http://www.github.com from given keywords
+Homepage: https://github.com/boddhissattva/github-search

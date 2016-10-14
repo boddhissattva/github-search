@@ -1,0 +1,71 @@
+.TH github-search  v1.0 "10-11-16" "Linux Programmer\'s Manual"
+
+.SH NAME
+.B github-search
+- search for repositories on 
+.I http://www.github.com
+from given keywords
+
+.SH SYNOPSIS
+.B github-search 
+[
+.B -p NPAGES
+] [
+.B -n
+] [
+.B -N
+] [
+.BR -h |\c
+.B --help
+] [
+.B -v\c
+|\c
+.B --version
+]
+.B KEYWORDS 
+.SH OVERVIEW
+
+.B github-search
+searches for keywords
+.B KEYWORDS
+on
+.I http://www.github.com
+and give found repository URLs. 
+.LP
+The number of pages of search results can be specified by
+.BR NPAGES.
+Default number of page is set to 5 but can be changed by modifying the variable
+.B DEFAULT_NUMBER_OF_PAGES
+defined in
+.I /usr/bin/github-search.
+.LP
+If 
+.B NPAGES
+is set to 
+.B 0\c
+, 
+.B github-search
+looks for all pages.
+.LP
+Flags
+.B -n
+and
+.B -N
+gives the number of found repositories and the number of result pages respectively.
+.SH EXAMPLES
+.nf
+$ github-search -p 1 bash script
+http://github.com/eshiota/bash
+http://github.com/hannob/bashcheck
+http://github.com/cfenollosa/bashblog
+http://github.com/ppaskowsky/Bash
+http://github.com/knowledge-club/bash
+http://github.com/fideloper/Vaprobash
+http://github.com/sodonnell/bash
+http://github.com/jmcantrell/bashful
+http://github.com/awesome-lists/awesome-bash
+http://github.com/riobard/bash-powerline
+
+.SH AUTHOR
+
+For any suggestion or question, please send a mail at jean.yvan.tissot[at]gmail.com. Issues can be reported at http://github.com/boddhissattva/github-search/issues

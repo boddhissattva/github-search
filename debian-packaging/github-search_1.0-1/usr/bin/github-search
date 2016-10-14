@@ -1,0 +1,78 @@
+#!/bin/bash
+
+DEFAULT_NUMBER_OF_PAGES=5 # number of pages without -p flag
+
+NUMBER_OF_PAGES_ARG=""
+NUM=0
+NUM2=0
+curl-html () {
+	curl -s "$@" | sed 's/</\n</g' | sed '/$^/d'
+}
+curl-html-href () {
+	curl-html "$@" | sed 's/href/\nhref/' | grep href | sed 's/href=\"\([^\"]*\)" .*/\1/' | sed 's/href=\"\([^\"]*\)">.*/\1/'
+}
+v-web-format () {
+	echo "$@" | sed 's/ /+/g'
+}
+
+while [ "$#" -ge 1 ]
+do
+    case $1 in
+    -h|--help )
+    man -l /usr/share/man/man1/github-search.1
+    exit
+    ;;
+    -p|--page )
+        NUMBER_OF_PAGES_ARG=$2
+        shift
+        ;;
+    -v|--version )
+        echo "Github-search version 1.0 ( 1.07.2016 )"
+        exit
+        ;;
+    -N)
+            NUM=1
+        ;;
+    -n)
+            NUM2=1
+        ;;
+    *) KEYWORD="$*"
+        break
+    esac
+shift
+done
+
+if [ -z "$KEYWORD"  ] && [ "$NUM" -eq 0 ] && [ "$NUM2" -eq 0 ];
+then
+echo "Keywords missing. Please see \"man github-search\"."
+exit
+fi
+
+
+URL1="https://github.com/search?p=1&q=$(v-web-format "$KEYWORD")&ref=opensearch&type=Repositories" 
+if [ "$NUM" -eq 1 ]
+then
+    MAXP=$(curl-html $URL1 | grep next_page -B 2 |  grep -o "[0-9,\,]*" |sed -n '1p')
+    echo $MAXP
+    exit
+fi
+if [ "$NUM2" -eq 1 ]
+then
+    echo $(curl-html $URL1 | grep found | grep -o "[0-9,\,]*")        
+    exit
+fi
+if ! [ -z $NUMBER_OF_PAGES_ARG ]
+then
+if [ "$NUMBER_OF_PAGES_ARG" -eq 0 ]
+then
+    MAXP=$(curl-html $URL1 | grep next_page -B 2 |  grep -o "[0-9]*" |sed -n '1p')
+    NUMBER_OF_PAGES_ARG=$MAXP
+fi
+fi
+
+for k in $(seq "${NUMBER_OF_PAGES_ARG:- $DEFAULT_NUMBER_OF_PAGES}" )
+        do
+            URL="https://github.com/search?p=$k&q=$(v-web-format "$KEYWORD")&ref=opensearch&type=Repositories" 
+            curl-html-href "$URL" | sed '/http/d' | grep --color -P '[^/]/[^/]' | grep "^/" | sed 's#^#http://github.com#'
+        done
+
