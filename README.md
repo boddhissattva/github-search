@@ -1,6 +1,6 @@
 #Github-search (v1.0)
 
-`github-search` searches for repositories on `github.com` from given keywords.
+`github-search` searches for repositories on `http://www.github.com` from given keywords.
 
 ##Install
 
