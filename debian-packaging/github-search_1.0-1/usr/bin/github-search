@@ -1,10 +1,14 @@
 #!/bin/bash
 
 DEFAULT_NUMBER_OF_PAGES=5 # number of pages without -p flag
+DEFAULT_BROWSER=${BROWSER:-firefox}
 
 NUMBER_OF_PAGES_ARG=""
 NUM=0
 NUM2=0
+CLONE=""
+BROW=""
+
 curl-html () {
 	curl -s "$@" | sed 's/</\n</g' | sed '/$^/d'
 }
@@ -35,6 +39,20 @@ do
         ;;
     -n)
             NUM2=1
+;;
+    -c)
+	if ! [ -z $BROW ]
+		then
+		echo "Cannot have -c and -b flags at the same time."
+fi
+            CLONE=1
+        ;;
+    -b)
+	if ! [ -z $CLONE ]
+		then
+		echo "Cannot have -c and -b flags at the same time."
+fi
+            BROW=1
         ;;
     *) KEYWORD="$*"
         break
@@ -70,9 +88,36 @@ then
 fi
 fi
 
+if ! [ -z $CLONE ]
+then
+for k in $(seq "${NUMBER_OF_PAGES_ARG:- $DEFAULT_NUMBER_OF_PAGES}" )
+        do
+            URL="https://github.com/search?p=$k&q=$(v-web-format "$KEYWORD")&ref=opensearch&type=Repositories" 
+            curl-html-href "$URL" | sed '/http/d' | grep --color -P '[^/]/[^/]' | grep "^/" | sed 's#^#http://github.com#' | while read i
+do
+git clone $i
+echo " "
+        done
+done
+fi
+
+if ! [ -z $BROW ]
+then
+for k in $(seq "${NUMBER_OF_PAGES_ARG:- $DEFAULT_NUMBER_OF_PAGES}" )
+        do
+            URL="https://github.com/search?p=$k&q=$(v-web-format "$KEYWORD")&ref=opensearch&type=Repositories" 
+            curl-html-href "$URL" | sed '/http/d' | grep --color -P '[^/]/[^/]' | grep "^/" | sed 's#^#http://github.com#' | while read i
+do
+echo opening \"$i\"
+nohup $DEFAULT_BROWSER "$i" </dev/null  >/dev/null 2>&1 &
+done
+done
+fi
+if  [ -z $BROW ] && [ -z $CLONE ]
+then
 for k in $(seq "${NUMBER_OF_PAGES_ARG:- $DEFAULT_NUMBER_OF_PAGES}" )
         do
             URL="https://github.com/search?p=$k&q=$(v-web-format "$KEYWORD")&ref=opensearch&type=Repositories" 
             curl-html-href "$URL" | sed '/http/d' | grep --color -P '[^/]/[^/]' | grep "^/" | sed 's#^#http://github.com#'
         done
-
+fi

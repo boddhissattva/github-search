@@ -15,6 +15,14 @@ from given keywords
 ] [
 .B -N
 ] [
+.B -c\c
+|\c
+.B --clone
+] [
+.B -b\c
+|\c
+.B --browser
+] [
 .BR -h |\c
 .B --help
 ] [
@@ -52,6 +60,18 @@ Flags
 and
 .B -N
 gives the number of found repositories and the number of result pages respectively.
+.LP
+.B -c
+clones every search results on the current directory.
+.LP
+.B -b
+opens all results with the browser 
+.BR $BROWSER
+or with
+.I firefox
+if 
+.BR $BOWSER
+is null.
 .SH EXAMPLES
 .nf
 $ github-search -p 1 bash script
