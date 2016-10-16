@@ -9,26 +9,26 @@ from given keywords
 .SH SYNOPSIS
 .B github-search 
 [
-.B -p NPAGES
-] [
-.B -n
-] [
-.B -N
-] [
+.B -p NPAGES\c
+] [\c
+.B -n\c
+] [\c
+.B -N\c
+] [\c
 .B -c\c
 |\c
-.B --clone
-] [
+.B --clone\c
+] [\c
 .B -b\c
 |\c
-.B --browser
-] [
+.B --browser\c
+] [\c
 .BR -h |\c
-.B --help
-] [
+.B --help\c
+] [\c
 .B -v\c
 |\c
-.B --version
+.B --version\c
 ]
 .B KEYWORDS 
 .SH OVERVIEW
@@ -62,7 +62,7 @@ and
 gives the number of found repositories and the number of result pages respectively.
 .LP
 .B -c
-clones every search results on the current directory.
+clones every search results on the current directory in the folder ${KEYWORDS// /_}
 .LP
 .B -b
 opens all results with the browser 

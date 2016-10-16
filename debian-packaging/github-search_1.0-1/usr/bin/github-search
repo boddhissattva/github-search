@@ -62,7 +62,7 @@ done
 
 if [ -z "$KEYWORD"  ] && [ "$NUM" -eq 0 ] && [ "$NUM2" -eq 0 ];
 then
-echo "Keywords missing. Please see \"man github-search\"."
+echo "Keywords missing. Please see \"man github-search\" for more instructions."
 exit
 fi
 
@@ -71,12 +71,13 @@ URL1="https://github.com/search?p=1&q=$(v-web-format "$KEYWORD")&ref=opensearch&
 if [ "$NUM" -eq 1 ]
 then
     MAXP=$(curl-html $URL1 | grep next_page -B 2 |  grep -o "[0-9,\,]*" |sed -n '1p')
-    echo $MAXP
+    echo ${MAXP:-0}
     exit
 fi
 if [ "$NUM2" -eq 1 ]
 then
-    echo $(curl-html $URL1 | grep found | grep -o "[0-9,\,]*")        
+    A=$(curl-html $URL1 | grep found | grep -o "[0-9,\,]*")        
+	echo ${A:-0}
     exit
 fi
 if ! [ -z $NUMBER_OF_PAGES_ARG ]
@@ -90,12 +91,18 @@ fi
 
 if ! [ -z $CLONE ]
 then
+0> /tmp/.github-search_counter
+DIRN=$(echo $KEYWORD | sed 's/ /-/g')
+mkdir $DIRN
 for k in $(seq "${NUMBER_OF_PAGES_ARG:- $DEFAULT_NUMBER_OF_PAGES}" )
         do
             URL="https://github.com/search?p=$k&q=$(v-web-format "$KEYWORD")&ref=opensearch&type=Repositories" 
             curl-html-href "$URL" | sed '/http/d' | grep --color -P '[^/]/[^/]' | grep "^/" | sed 's#^#http://github.com#' | while read i
 do
-git clone $i
+    COUNT=$(($(</tmp/.github-search_counter)+1))
+git clone $i "github-search_$DIRN/$COUNT-$(echo "$i" | sed 's#.*/\([^/]*\)#\1#g')"
+echo $COUNT> /tmp/.github-search_counter
+
 echo " "
         done
 done
