@@ -1,12 +1,12 @@
-#Github-search (v1.0)
+# Github-search (v1.0)
 
 `github-search` searches for repositories on `http://www.github.com` from given keywords.
 
-##Install
+## Install
 
     dpkg -i github-search_1.0-1.deb
 
-##Overview
+## Overview
 
 The number of pages of search results can be specified by `NPAGES`.
 
@@ -16,11 +16,11 @@ If `NPAGES` is set to 0, `github-search` looks for all pages.
 
 Flags -n and -N gives the number of found repositories and the number of result pages respectively.
 
-##Synopsis
+## Synopsis
 
        github-search [-n] [-N] [ -p NPAGES ] [ -h|--help ] [ -v|--version ] KEYWORD  
 
-##Examples
+## Examples
 
        # github-search -p 1 "bash script" 
        http://github.com/eshiota/bash
@@ -33,7 +33,3 @@ Flags -n and -N gives the number of found repositories and the number of result 
        http://github.com/jmcantrell/bashful
        http://github.com/awesome-lists/awesome-bash
        http://github.com/riobard/bash-powerline
-
-##Author
-
-For any suggestion or question, please send a mail at jean.yvan.tissot[at]gmail.com. Issues can be reported at http://github.com/boddhissattva/github-search/issues
